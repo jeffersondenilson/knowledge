@@ -7,9 +7,9 @@ app.db = db;
 
 consign()
 	.then('./config/middleware.js')
-	.then('./api/validators.js')
+	.then('./api/validation.js')
 	.then('./api')
 	.then('./config/routes.js')
 	.into(app);
 
-app.listen(PORT, ()=>console.log(`Listening on port ${PORT}...`));uire()
+app.listen(PORT, ()=>console.log(`Listening on port ${PORT}...`));
