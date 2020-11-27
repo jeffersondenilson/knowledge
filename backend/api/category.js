@@ -50,7 +50,7 @@ module.exports = app => {
 		}
 	}
 
-	// adiciona atributo na categoria com as categorias pai
+	// adiciona atributo com o caminho até as categorias pai
 	// 'category > subcategory1 > subcategory2...'
 	const withPath = categories => {
 		// filtra na lista de categorias as que tem uma categoria como pai
@@ -58,16 +58,16 @@ module.exports = app => {
 			let parent = categories.filter(parent => parent.id === parentId);
 			return parent.length > 0 ? parent[0] : null;
 		}
-
+		// adiciona atributo path em cada categoria
 		const categoriesWithPath = categories.map(category => {
 			let path = category.name;
 			let parent = getParent(categories, category.parentId);
-
+			// concatena path incluindo todas as categorias pai
 			while(parent){
 				path = `${parent.name} > ${path}`;
 				parent = getParent(categories, parent.parentId);
 			}
-
+			
 			return {...category, path}
 		})
 
@@ -80,20 +80,58 @@ module.exports = app => {
 		return categoriesWithPath;
 	}
 
+	// retorna categorias com atributo children
+	// formando estrutura de árvore
+	/*
+	[
+		{
+			'category1', 
+			children: [{ 'subcategory1', children: [...] }, ...]
+		},
+		{
+			'category2',
+			children: [...]
+		}
+		...
+	]
+	*/
+	const toTree = (categories, tree) => {
+		// começa pelas categorias que não tem pai
+		if(!tree) tree = categories.filter(c => !c.parentId);
+		
+		tree = tree.map(parentNode => {
+			// filtra filhos diretos do parentNode
+			const isChild = node => node.parentId == parentNode.id;
+			// gera estrutura de árvore para cada filho
+			parentNode.children = toTree(categories, categories.filter(isChild));
+			return parentNode;
+		});
+
+		return tree;
+	}
+
 	const get = (req, res) => {
-		// app.db('categories')
-		// 	.select('id', 'name', 'email', 'admin')
-		// 	.then(categories => res.json(categories))
-		// 	.catch(err => res.status(500).send(err));
+		app.db('categories')
+			.then(categories => res.json(
+				withPath(categories)
+			))
+			.catch(err => res.status(500).send(err));
 	}
 
 	const getById = (req, res) => {
-		// app.db('categories')
-		// 	.select('id', 'name', 'email', 'admin')
-		// 	.where({ id: req.params.id }).first()
-		// 	.then(category => res.json(category))
-		// 	.catch(err => res.status(500).send(err));
+		app.db('categories')
+			.where({ id: req.params.id }).first()
+			.then(category => res.json(category))
+			.catch(err => res.status(500).send(err));
 	}
 
-	return { save, get, getById }
+	const getTree = (req, res) => {
+		app.db('categories')
+			.then(categories => res.json(
+				toTree(withPath(categories))
+			))
+			.catch(err => res.status(500).send(err));
+	}
+
+	return { save, remove, get, getById, getTree }
 }

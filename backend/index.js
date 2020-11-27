@@ -12,4 +12,4 @@ consign()
 	.then('./config/routes.js')
 	.into(app);
 
-app.listen(PORT, ()=>console.log(`Listening on port ${PORT}...`));
+app.listen(PORT, ()=>console.log(`Listening on port ${PORT}!`));
