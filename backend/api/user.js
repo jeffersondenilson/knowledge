@@ -53,6 +53,7 @@ module.exports = app => {
 	}
 
 	const get = (req, res) => {
+		// TODO: paginação
 		app.db('users')
 			.select('id', 'name', 'email', 'admin')
 			.then(users => res.json(users))

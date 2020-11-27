@@ -1,7 +1,7 @@
 module.exports = app => {
 	const { existsOrError, notExistsOrError } = app.api.validation;
 
-	const save = async (req, res) => {
+	const save = (req, res) => {
 		const category = {...req.body};
 		if(req.params.id) category.id = req.params.id;
 
@@ -29,6 +29,7 @@ module.exports = app => {
 
 	const remove = async (req, res) => {
 		try{
+			// TODO: apagar?
 			existsOrError(req.params.id, 'Código da Categoria não informado');
 			// não permite excluir se tiver subcategorias/artigos
 			// TODO: fazer on delete cascade
@@ -42,11 +43,16 @@ module.exports = app => {
 
 			const rowsDeleted = await app.db('categories')
 				.where({ id: req.params.id }).del();
-			existsOrError(rowsDeleted, 'Categoria não foi encontrada');
+
+			try{
+				existsOrError(rowsDeleted, 'Categoria não foi encontrada');
+			}catch(msg){
+				return res.status(400).send(msg);
+			}
 
 			res.status(204).send();
 		}catch(msg){
-			res.status(400).send(msg);
+			res.status(500).send(msg);
 		}
 	}
 
@@ -110,12 +116,23 @@ module.exports = app => {
 		return tree;
 	}
 
-	const get = (req, res) => {
-		app.db('categories')
-			.then(categories => res.json(
-				withPath(categories)
-			))
-			.catch(err => res.status(500).send(err));
+	const get = async (req, res) => {
+		try{
+			const page = req.query.page || 1;
+			const limit = req.query.limit || 10;
+			// TODO: Promise.all
+			const categoriesTotal = await app.db('categories').count('id').first();
+
+			const categories = await app.db('categories')
+				.limit(limit).offset(page * limit - limit);
+
+			res.json({
+				data: withPath(categories),
+				count: parseInt(categoriesTotal.count)
+			});
+		}catch(msg){
+			res.status(500).send();
+		}
 	}
 
 	const getById = (req, res) => {
