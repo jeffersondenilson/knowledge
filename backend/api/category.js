@@ -120,11 +120,13 @@ module.exports = app => {
 		try{
 			const page = req.query.page || 1;
 			const limit = req.query.limit || 10;
-			// TODO: Promise.all
-			const categoriesTotal = await app.db('categories').count('id').first();
 
-			const categories = await app.db('categories')
-				.limit(limit).offset(page * limit - limit);
+			const [categories, categoriesTotal] = await Promise.all([
+				app.db('categories')
+					.limit(limit).offset(page * limit - limit),
+
+				app.db('categories').count('id').first()
+			]);
 
 			res.json({
 				data: withPath(categories),

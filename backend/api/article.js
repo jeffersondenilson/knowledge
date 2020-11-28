@@ -52,20 +52,22 @@ module.exports = app => {
 		try{
 			const page = req.query.page || 1;
 			const limit = req.query.limit || 10;
-			// TODO: Promise.all
-			const articlesTotal = await app.db('articles').count('id').first();
 
-			const articles = await app.db('articles')
-				// TODO: mostrar autor
-				.select('id', 'name', 'description')
-				.limit(limit).offset(page * limit - limit);
+			const [articles, articlesTotal] = await Promise.all([
+				app.db({a: 'articles', u: 'users'})
+					.select('a.id', 'a.name', 'a.description', { author: 'u.name' })
+					.whereRaw('?? = ??', ['a.userId', 'u.id'])
+					.limit(limit).offset(page * limit - limit),
+
+				app.db('articles').count('id').first()
+			]);
 			
 			res.json({ 
 				data: articles, 
 				count: parseInt(articlesTotal.count) 
 			});
 		}catch(msg){
-			res.status(500).send(err);
+			res.status(500).send(msg);
 		}
 	}
 

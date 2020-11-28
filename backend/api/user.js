@@ -52,12 +52,26 @@ module.exports = app => {
 		}
 	}
 
-	const get = (req, res) => {
-		// TODO: paginação
-		app.db('users')
-			.select('id', 'name', 'email', 'admin')
-			.then(users => res.json(users))
-			.catch(err => res.status(500).send(err));
+	const get = async (req, res) => {
+		try{
+			const page = req.query.page || 1;
+			const limit = req.query.limit || 10;
+
+			const [users, usersTotal] = await Promise.all([
+				app.db('users')
+					.select('id', 'name', 'email', 'admin')
+					.limit(limit).offset(page * limit - limit),
+
+				app.db('users').count('id').first()
+			]);
+
+			res.json({
+				data: users,
+				count: parseInt(usersTotal.count)
+			});
+		}catch(msg){
+			res.status(500).send(msg);
+		}
 	}
 
 	const getById = (req, res) => {
