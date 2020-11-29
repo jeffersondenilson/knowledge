@@ -2,11 +2,12 @@
 
 module.exports = {
   client: 'postgresql',
-  connection: {
+  /*connection: {
     database: 'knowledge',
     user:     process.env.DB_USER,
     password: process.env.DB_PASSWORD
-  },
+  },*/
+  connection: process.env.MAIN_DB_URI,
   pool: {
     min: 2,
     max: 10
