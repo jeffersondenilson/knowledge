@@ -91,7 +91,6 @@ module.exports = app => {
 			const limit = req.query.limit || 10;
 			// busca id das subcategorias
 			const categories = await app.db.raw(queries.categoryWithChildren, categoryId);
-			console.log(categories);
 			const ids = categories.rows.map(c => c.id);
 
 			const articles = await app.db({a: 'articles', u: 'users'})
@@ -99,14 +98,8 @@ module.exports = app => {
 				.whereRaw('?? = ??', ['u.id', 'a.userId'])
 				.whereIn('categoryId', ids)
 				.orderBy('a.id', 'desc')
-				.limit(limit).offset(page * limit - limit)
-			// console.log(articles)
-			/**/
-			const q = await app.db({a: 'articles', u: 'users'})
-				.select('a.id', 'a.name', 'a.description', 'a.imageUrl', { author: 'u.name' })
-				.whereRaw('?? = ??', ['u.id', 'a.userId'])
-				.whereIn('categoryId', ids)
-			/**/
+				.limit(limit).offset(page * limit - limit);
+			
 			res.json(articles);
 		}catch(msg){
 			res.status(500).send(msg);

@@ -1,4 +1,4 @@
-// ?
+// seleciona subcategorias de forma recursiva
 module.exports = {
 	categoryWithChildren: `
 		WITH RECURSIVE subcategories (id) AS (
