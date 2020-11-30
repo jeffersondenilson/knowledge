@@ -12,7 +12,7 @@ module.exports = app => {
 				articlesTotal, 
 				lastStat
 			] = await Promise.all([
-				app.db('users').count('id').first(),
+				app.db('users').count('id').whereNull('deletedAt').first(),
 				app.db('categories').count('id').first(),
 				app.db('articles').count('id').first(),
 				Stat.findOne({}, {}, { sort: { 'createdAt': -1 } })

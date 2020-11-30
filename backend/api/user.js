@@ -12,6 +12,11 @@ module.exports = app => {
 		const user = {...req.body};
 		if(req.params.id) user.id = req.params.id;
 
+		// admin = false, caso esteja criando a conta em '/signup'
+		if(!req.originalUrl.startsWith('/users')) user.admin = false;
+		// verifica se é admin
+		if(!req.user || !req.user.admin) user.admin = false;
+
 		// validação
 		try{
 			existsOrError(user.name, 'Nome não informado');
@@ -42,6 +47,7 @@ module.exports = app => {
 			app.db('users')
 				.update(user)
 				.where({ id: user.id })
+				.whereNull('deletedAt')
 				.then(() => res.status(204).send())
 				.catch(err => res.status(500).send(err));
 		}else{
@@ -49,6 +55,24 @@ module.exports = app => {
 				.insert(user)
 				.then(() => res.status(204).send())
 				.catch(err => res.status(500).send(err));
+		}
+	}
+
+	const remove = async (req, res) => {
+		try{
+			const rowsUpdated = await app.db('users')
+				.update({ deletedAt: new Date() })
+				.where({ id: req.params.id });
+				
+			try{
+				existsOrError(rowsUpdated, 'Usuário não foi encontrado');
+			}catch(msg){
+				return res.status(400).send(msg);
+			}
+
+			res.status(204).send();
+		}catch(msg){
+			res.status(500).send(msg);
 		}
 	}
 
@@ -60,9 +84,10 @@ module.exports = app => {
 			const [users, usersTotal] = await Promise.all([
 				app.db('users')
 					.select('id', 'name', 'email', 'admin')
+					.whereNull('deletedAt')
 					.limit(limit).offset(page * limit - limit),
 
-				app.db('users').count('id').first()
+				app.db('users').count('id').whereNull('deletedAt').first()
 			]);
 
 			res.json({
@@ -77,10 +102,11 @@ module.exports = app => {
 	const getById = (req, res) => {
 		app.db('users')
 			.select('id', 'name', 'email', 'admin')
+			.whereNull('deletedAt')
 			.where({ id: req.params.id }).first()
 			.then(user => res.json(user))
 			.catch(err => res.status(500).send(err));
 	}
 
-	return { save, get, getById }
+	return { save, get, getById, remove }
 }

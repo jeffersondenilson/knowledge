@@ -15,10 +15,10 @@ module.exports = app => {
 
 	app.route('/users/:id')
 		.all(app.config.passport.authenticate())
-		// TODO: mudar?
+		// TODO: obter e atualizar o próprio usuário?
 		.get(admin(app.api.user.getById))
 		.put(admin(app.api.user.save))
-		//.delete(admin(app.api.user.remove))
+		.delete(admin(app.api.user.remove))
 
 	app.route('/categories')
 		.all(app.config.passport.authenticate())
