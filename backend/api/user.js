@@ -14,7 +14,7 @@ module.exports = app => {
 
 		// admin = false, caso esteja criando a conta em '/signup'
 		if(!req.originalUrl.startsWith('/users')) user.admin = false;
-		// verifica se é admin
+		// admin = false, caso não esteja logado ou não é admin
 		if(!req.user || !req.user.admin) user.admin = false;
 
 		// validação
@@ -58,6 +58,7 @@ module.exports = app => {
 		}
 	}
 
+	// soft delete (adiciona deletedAt, mas não exclui os dados)
 	const remove = async (req, res) => {
 		try{
 			const rowsUpdated = await app.db('users')

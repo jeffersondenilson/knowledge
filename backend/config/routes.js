@@ -5,9 +5,6 @@ module.exports = app => {
 	app.post('/signin', app.api.auth.signin)
 	app.post('/validateToken', app.api.auth.validateToken)
 
-	// rotas protegidas
-	// app.use(app.config.passport.authenticate())
-
 	app.route('/users')
 		.all(app.config.passport.authenticate())
 		.get(admin(app.api.user.get))
@@ -15,7 +12,6 @@ module.exports = app => {
 
 	app.route('/users/:id')
 		.all(app.config.passport.authenticate())
-		// TODO: obter e atualizar o próprio usuário?
 		.get(admin(app.api.user.getById))
 		.put(admin(app.api.user.save))
 		.delete(admin(app.api.user.remove))
