@@ -1,6 +1,6 @@
 const jwt = require('jwt-simple');
 const bcrypt = require('bcrypt-nodejs');
-// TODO: logout
+
 module.exports = app => {
 	const signin = async (req, res) => {
 		try{
