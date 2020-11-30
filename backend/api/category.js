@@ -29,18 +29,6 @@ module.exports = app => {
 
 	const remove = async (req, res) => {
 		try{
-			// TODO: apagar?
-			existsOrError(req.params.id, 'Código da Categoria não informado');
-			// não permite excluir se tiver subcategorias/artigos
-			// TODO: fazer on delete cascade
-			const subcategory = await app.db('categories')
-				.where({ parentId: req.params.id });
-			notExistsOrError(subcategory, 'Categoria possui subcategorias');
-
-			const articles = await app.db('articles')
-				.where({ categoryId: req.params.id })
-			notExistsOrError(articles, 'Categoria possui artigos');
-
 			const rowsDeleted = await app.db('categories')
 				.where({ id: req.params.id }).del();
 
