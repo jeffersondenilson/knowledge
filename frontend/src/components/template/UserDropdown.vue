@@ -9,8 +9,10 @@
       </div>
     </template>
 
-	  <b-dropdown-item href="#">
-	  	<i class="fa fa-cogs"></i> Administração
+	  <b-dropdown-item>
+	  	<router-link to="/admin">
+	  		<i class="fa fa-cogs"></i> Administração
+	  	</router-link>
 	  </b-dropdown-item>
 	  <b-dropdown-item href="#">
 	  	<i class="fa fa-sign-out"></i> Sair
@@ -52,5 +54,15 @@
 		margin: 0px 10px;
 		max-height: 37px;
 		border-radius: 5px;
+	}
+
+	.user-dropdown a {
+		color: #000;
+		text-decoration: none;
+	}
+
+	.user-dropdown a:hover {
+		color: #000;
+		text-decoration: none;
 	}
 </style>
