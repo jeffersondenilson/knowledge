@@ -6,15 +6,20 @@
 		<h1 class="title">
 			{{ title }}
 		</h1>
+		<UserDropdown v-if="showUserDropdown" />
 	</header>
 </template>
 
 <script>
+	import UserDropdown from './UserDropdown';
+
 	export default {
 		name: 'Header',
+		components: { UserDropdown },
 		props: {
 			title: String,
-			showToggle: Boolean
+			showToggle: Boolean,
+			showUserDropdown: Boolean
 		},
 		computed: {
 			icon(){
@@ -62,7 +67,6 @@
 		width: 60px;
 		height: 100%;
 		color: #fff;
-		/*justify-self: flex-start;*/
 		text-decoration: none;
 
 		display: flex;

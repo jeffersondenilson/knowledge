@@ -1,10 +1,19 @@
 <template>
-	<main class="content"></main>
+	<main class="content">
+		<PageTitle 
+			icon="fa fa-cogs" 
+			title="Pagina" 
+			subtitle="Wub"
+		/>
+	</main>
 </template>
 
 <script>
+	import PageTitle from './PageTitle';
+
 	export default {
-		name: 'Content'
+		name: 'Content',
+		components: { PageTitle }
 	}
 </script>
 
