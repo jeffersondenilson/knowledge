@@ -4,7 +4,7 @@
   "description": "",
   "main": "backend/index.js",
   "scripts": {
-    "client": "npm start --prefix frontend",
+    "client": "npm run serve --prefix frontend",
     "server": "npm start --prefix backend"
   },
   "keywords": [],
