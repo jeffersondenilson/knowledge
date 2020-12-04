@@ -117,7 +117,7 @@ module.exports = app => {
 			]);
 
 			res.json({
-				data: withPath(categories),
+				categories: withPath(categories),
 				count: parseInt(categoriesTotal.count)
 			});
 		}catch(msg){

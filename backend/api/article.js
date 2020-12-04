@@ -65,7 +65,7 @@ module.exports = app => {
 			]);
 			
 			res.json({ 
-				data: articles, 
+				articles, 
 				count: parseInt(articlesTotal.count) 
 			});
 		}catch(msg){

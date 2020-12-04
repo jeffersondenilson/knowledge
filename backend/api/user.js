@@ -92,7 +92,7 @@ module.exports = app => {
 			]);
 
 			res.json({
-				data: users,
+				users,
 				count: parseInt(usersTotal.count)
 			});
 		}catch(msg){
