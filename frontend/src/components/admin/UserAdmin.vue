@@ -1,6 +1,66 @@
 <template>
 	<div class="user-admin">
-		<b-table hover striped :items="users" :fields="fields"></b-table>
+		<b-form>
+			<b-row>
+				<b-col md="6" sm="12">
+					<b-form-group label="Nome:" label-for="user-name">
+						<b-form-input
+							id="user-name"
+							type="text"
+							v-model="user.name"
+							required
+							autocomplete="off"
+							placeholder="Informe o Nome do Usuário..."
+						/>
+					</b-form-group>
+				</b-col>
+				<b-col md="6" sm="12">
+					<b-form-group label="Email:" label-for="user-email">
+						<b-form-input
+							id="user-email"
+							type="email"
+							v-model="user.email"
+							required
+							autocomplete="off"
+							placeholder="Informe o E-mail do Usuário..."
+						/>
+					</b-form-group>
+				</b-col>
+			</b-row>
+			<b-row>
+				<b-form-checkbox id="user-admin" v-model="user.admin" class="m-3">
+					Administrador?
+				</b-form-checkbox>
+			</b-row>
+			<b-row>
+				<b-col md="6" sm="12">
+					<b-form-group label="Senha:" label-for="user-password">
+						<b-form-input
+							id="user-password"
+							type="password"
+							v-model="user.password"
+							required
+							autocomplete="off"
+							placeholder="Informe a Senha do Usuário..."
+						/>
+					</b-form-group>
+				</b-col>
+				<b-col md="6" sm="12">
+					<b-form-group label="Confirmar Senha:" label-for="user-confirm-password">
+						<b-form-input
+							id="user-confirm-password"
+							type="password"
+							v-model="user.confirmPassword"
+							required
+							autocomplete="off"
+							placeholder="Confirme a Senha do Usuário..."
+						/>
+					</b-form-group>
+				</b-col>
+			</b-row>
+		</b-form>
+
+		<b-table hover striped responsive :items="users" :fields="fields"></b-table>
 	</div>
 </template>
 
