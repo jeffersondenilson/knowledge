@@ -68,23 +68,23 @@
 					</b-form-group>
 				</b-col>
 			</b-row>
-			<b-row>
+			<b-row class="mb-3">
 				<b-col xs="12">
-					<b-button variant="primary" v-show="mode === 'save'" @click="save" class="mb-3">
+					<b-button variant="primary" v-show="mode === 'save'" @click="save">
 						Salvar
 					</b-button>
 					<b-button variant="danger" v-show="mode === 'remove'" @click="remove">
 						Excluir
 					</b-button>
-					<b-button class="ml-2 mb-3" @click="reset">
+					<b-button class="ml-2" @click="reset">
 						Cancelar
 					</b-button>
 				</b-col>
 			</b-row>
 		</b-form>
 
-		<b-table hover striped :items="users" :fields="fields">
-			<template slot="actions" slot-scope="data">
+		<b-table hover striped :items="users" :fields="fields" id="users-table">
+			<template #cell(actions)="data">
 				<b-button variant="warning" @click="loadUser(data.item)" class="mr-2">
 					<i class="fa fa-pencil"></i>
 				</b-button>
@@ -93,6 +93,14 @@
 				</b-button>
 			</template>
 		</b-table>
+
+		<b-pagination
+      v-model="page"
+      :total-rows="count"
+      :per-page="limit"
+      aria-controls="users-table"
+    ></b-pagination>
+    <!-- TODO: LIMIT -->
 	</div>
 </template>
 
@@ -108,6 +116,8 @@ export default {
 			user: {},
 			users: [],
 			count: 0,
+			page: 1,
+			limit: 10,
 			fields: [
 				{ key: "id", label: "Código", sortable: true },
 				{ key: "name", label: "Nome", sortable: true },
@@ -125,7 +135,7 @@ export default {
 	methods: {
 		loadUsers() {
 			axios
-				.get(`${baseApiUrl}/users`)
+				.get(`${baseApiUrl}/users?page=${this.page}&limit=${this.limit}`)
 				.then(res => {
 					this.users = res.data.users;
 					this.count = res.data.count;
@@ -167,6 +177,14 @@ export default {
 	},
 	mounted() {
 		this.loadUsers();
+	},
+	watch: {
+		page(){
+			this.loadUsers();
+		},
+		limit(){
+			this.loadUsers();
+		}
 	}
 };
 </script>
