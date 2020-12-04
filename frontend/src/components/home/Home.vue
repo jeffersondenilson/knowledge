@@ -47,7 +47,7 @@ export default {
 			axios
 				.get(`${baseApiUrl}/stats`)
 				.then(res => (this.stats = res.data))
-				.catch(err => {});
+				.catch(err => showError(err));
 		}
 	},
 	mounted() {
