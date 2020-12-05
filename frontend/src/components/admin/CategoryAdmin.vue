@@ -2,7 +2,7 @@
 	<div class="category-admin">
 		<b-form>
 			<b-row>
-				<b-col md="6" sm="12">
+				<b-col>
 					<b-form-group label="Nome:" label-for="category-name">
 						<b-form-input
 							id="category-name"
@@ -15,26 +15,30 @@
 						/>
 					</b-form-group>
 				</b-col>
+			</b-row>
+			<b-row>
 				<b-col>
-					<!-- TODO: SELECT -->
 					<b-form-group label="Categoria pai:" label-for="category-parent">
-						<b-form-input
+						<b-form-select
 							id="category-parent"
-							type="email"
-							v-model="category.path"
-							:readonly="mode === 'remove'"
-							autocomplete="off"
-							placeholder="Informe o Nome da Categoria pai..."
-						/>
+							v-model="category.parentId"
+							:options="categoriesPaths"
+						></b-form-select>
 					</b-form-group>
 				</b-col>
 			</b-row>
-			<b-row v-show="mode === 'remove'">
-				<b-col>
-					<b-alert variant="danger">
-						<i class="fa fa-exclamation-triangle"></i> 
-			      Excluir uma categoria irá excluir todas as subcategorias e artigos contidos nela!
-			    </b-alert>
+			<b-row id="aviso">
+				<b-col md="6" sm="12">
+					<b-alert
+						variant="danger"
+						:show="mode === 'remove'"
+						style="font-size: 1.1rem;"
+					>
+						<i class="fa fa-exclamation-triangle"></i>
+						<br />
+						Excluir uma categoria irá excluir todas as subcategorias e artigos
+						contidos nela!
+					</b-alert>
 				</b-col>
 			</b-row>
 			<b-row class="mb-3">
@@ -51,10 +55,21 @@
 				</b-col>
 			</b-row>
 		</b-form>
-
-		<b-table hover striped :items="categories" :fields="fields" id="categories-table">
+		<!-- TODO: paginar do lado cliente -->
+		<b-table
+			hover
+			striped
+			responsive
+			:items="categories"
+			:fields="fields"
+			id="categories-table"
+		>
 			<template #cell(actions)="data">
-				<b-button variant="warning" @click="loadCategory(data.item)" class="mr-2">
+				<b-button
+					variant="warning"
+					@click="loadCategory(data.item)"
+					class="mr-2 mb-2 mb-md-0"
+				>
 					<i class="fa fa-pencil"></i>
 				</b-button>
 				<b-button variant="danger" @click="loadCategory(data.item, 'remove')">
@@ -63,13 +78,22 @@
 			</template>
 		</b-table>
 
-		<b-pagination
-      v-model="page"
-      :total-rows="count"
-      :per-page="limit"
-      @click="test"
-      aria-controls="categories-table"
-    ></b-pagination>
+		<div class="pagination">
+			<b-pagination
+				v-model="page"
+				:total-rows="count"
+				:per-page="limit"
+				aria-controls="categories-table"
+			></b-pagination>
+			<div>
+				<span class="mx-3">Items por página: </span>
+				<b-form-select
+					v-model="limit"
+					:options="[10, 20, 50, 100]"
+					size="sm"
+				></b-form-select>
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -90,20 +114,17 @@ export default {
 			fields: [
 				{ key: "id", label: "Código", sortable: true },
 				{ key: "name", label: "Nome", sortable: true },
+				{ key: "path", label: "Caminho", sortable: true },
 				{ key: "actions", label: "Ações" }
 			]
 		};
 	},
 	methods: {
-		// TODO: remover @click
-		test(){
-			console.log('page');
-		},
 		loadCategories() {
 			axios
 				.get(`${baseApiUrl}/categories?page=${this.page}&limit=${this.limit}`)
 				.then(res => {
-					console.log(res.data.categories)
+					console.log(res.data.categories);
 					this.categories = res.data.categories;
 					this.count = res.data.count;
 				})
@@ -119,6 +140,9 @@ export default {
 			this.loadCategories();
 		},
 		save() {
+			// if(this.category.id === this.category.parentId){
+			// 	this.category.parentId = null;
+			// }
 			const method = this.category.id ? "put" : "post";
 			const id = this.category.id ? `/${this.category.id}` : "";
 			axios[method](`${baseApiUrl}/categories${id}`, this.category)
@@ -142,16 +166,39 @@ export default {
 				.catch(showError);
 		}
 	},
+	computed: {
+		categoriesPaths() {
+			const paths = [
+				{ value: null, text: "" },
+				...this.categories.map(c => ({
+					value: c.parentId,
+					text: c.path
+				}))
+			];
+			return paths;
+		}
+	},
 	mounted() {
 		this.loadCategories();
 	},
 	watch: {
-		page(){
+		page() {
 			this.loadCategories();
 		},
-		limit(){
+		limit() {
 			this.loadCategories();
 		}
 	}
 };
 </script>
+
+<style>
+.pagination {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.pagination select {
+	width: 70px;
+}
+</style>

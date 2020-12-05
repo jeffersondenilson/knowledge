@@ -85,7 +85,11 @@
 
 		<b-table hover striped :items="users" :fields="fields" id="users-table">
 			<template #cell(actions)="data">
-				<b-button variant="warning" @click="loadUser(data.item)" class="mr-2">
+				<b-button
+					variant="warning"
+					@click="loadUser(data.item)"
+					class="mr-2 mb-2 mb-md-0"
+				>
 					<i class="fa fa-pencil"></i>
 				</b-button>
 				<b-button variant="danger" @click="loadUser(data.item, 'remove')">
@@ -94,13 +98,22 @@
 			</template>
 		</b-table>
 
-		<b-pagination
-      v-model="page"
-      :total-rows="count"
-      :per-page="limit"
-      aria-controls="users-table"
-    ></b-pagination>
-    <!-- TODO: LIMIT -->
+		<div class="pagination">
+			<b-pagination
+				v-model="page"
+				:total-rows="count"
+				:per-page="limit"
+				aria-controls="users-table"
+			></b-pagination>
+			<div>
+				<span class="mx-3">Items por página: </span>
+				<b-form-select
+					v-model="limit"
+					:options="[10, 20, 50, 100]"
+					size="sm"
+				></b-form-select>
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -179,12 +192,23 @@ export default {
 		this.loadUsers();
 	},
 	watch: {
-		page(){
+		page() {
 			this.loadUsers();
 		},
-		limit(){
+		limit() {
 			this.loadUsers();
 		}
 	}
 };
 </script>
+
+<style>
+.pagination {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.pagination select {
+	width: 70px;
+}
+</style>
