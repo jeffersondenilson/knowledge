@@ -18,12 +18,20 @@
 			</b-row>
 			<b-row>
 				<b-col>
-					<b-form-group label="Categoria pai:" label-for="category-parent">
+					<b-form-group label="Categoria pai:" label-for="category-parentId">
 						<b-form-select
-							id="category-parent"
+							v-if="mode === 'save'"
+							id="category-parentId"
 							v-model="category.parentId"
-							:options="categoriesPaths"
+							:options="categories"
 						></b-form-select>
+						<b-form-input 
+							v-else
+							id="category-parentId"
+							type="text"
+							v-model="category.path"
+							readonly
+						/>
 					</b-form-group>
 				</b-col>
 			</b-row>
@@ -32,10 +40,9 @@
 					<b-alert
 						variant="danger"
 						:show="mode === 'remove'"
-						style="font-size: 1.1rem;"
+						class="remove-warning"
 					>
 						<i class="fa fa-lg fa-exclamation-triangle"></i>
-						
 						Excluir uma categoria irá excluir todas as subcategorias e artigos
 						contidos nela!
 					</b-alert>
@@ -127,7 +134,11 @@ export default {
 			axios
 				.get(`${baseApiUrl}/categories`)
 				.then(res => {
-					this.categories = res.data.categories;
+					this.categories = res.data.categories.map(category => ({
+						...category,
+						value: category.id,
+						text: category.path
+					}));
 					this.count = res.data.count;
 				})
 				.catch(showError);
@@ -165,18 +176,6 @@ export default {
 				.catch(showError);
 		}
 	},
-	computed: {
-		categoriesPaths() {
-			const paths = [
-				{ value: null, text: "(Nenhuma)" },
-				...this.categories.map(c => ({
-					value: c.parentId,
-					text: c.path
-				}))
-			];
-			return paths;
-		}
-	},
 	mounted() {
 		this.loadCategories();
 	}
@@ -191,5 +190,8 @@ export default {
 
 .pagination select {
 	width: 70px;
+}
+.remove-warning {
+	font-size: 1.1rem;
 }
 </style>
