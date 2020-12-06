@@ -1,6 +1,7 @@
 <template>
 	<div class="article-admin">
 		<b-form>
+			<!-- TODO: remover b-row -->
 			<b-row>
 				<b-col>
 					<b-form-group label="Nome:" label-for="article-name">
@@ -45,11 +46,10 @@
 					</b-form-group>
 				</b-col>
 			</b-row>
-			<b-row>
+			<b-row v-show="mode === 'save'">
 				<b-col>
 					<b-form-group label="Categoria:" label-for="article-categoryId">
 						<b-form-select
-							v-show="mode === 'save'"
 							id="article-categoryId"
 							v-model="article.categoryId"
 							:options="categories"
@@ -58,11 +58,10 @@
 					</b-form-group>
 				</b-col>
 			</b-row>
-			<b-row>
+			<b-row v-if="mode === 'save'">
 				<b-col>
 					<b-form-group label="Autor:" label-for="article-userId">
 						<b-form-select
-							v-show="mode === 'save'"
 							id="article-userId"
 							v-model="article.userId"
 							:options="users"
@@ -71,7 +70,7 @@
 					</b-form-group>
 				</b-col>
 			</b-row>
-			<b-row>
+			<b-row v-show="mode === 'save'">
 				<b-col>
 					<b-form-group label="Conteúdo" label-for="category-content">
 						<VueEditor
@@ -174,11 +173,35 @@ export default {
 				})
 				.catch(showError);
 		},
+		loadCategories() {
+			axios
+				.get(`${baseApiUrl}/categories`)
+				.then(res => {
+					this.categories = res.data.categories.map(category => ({
+						value: category.id,
+						text: category.path
+					}));
+				})
+				.catch(showError);
+		},
+		loadUsers() {
+			axios
+				.get(`${baseApiUrl}/users`)
+				.then(res => {
+					this.users = res.data.users.map(user => ({
+						value: user.id,
+						text: `${user.name} (${user.email})`
+					}));
+				})
+				.catch(showError);
+		},
 		loadArticle(article, mode = "save") {
 			// carrega artigo com conteúdo
 			this.mode = mode;
 			axios.get(`${baseApiUrl}/articles/${article.id}`)
-				.then(res => this.article = res.data)
+				.then(res => {
+					this.article = res.data;	
+				})
 				.catch(showError);
 		},
 		reset() {
@@ -212,6 +235,16 @@ export default {
 	},
 	mounted() {
 		this.loadArticles();
+		this.loadCategories();
+		this.loadUsers();
+	},
+	watch: {
+		page() {
+			this.loadArticles();
+		},
+		limit() {
+			this.loadArticles();
+		}
 	}
 };
 </script>
