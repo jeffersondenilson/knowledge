@@ -71,6 +71,16 @@
 					</b-form-group>
 				</b-col>
 			</b-row>
+			<b-row>
+				<b-col>
+					<b-form-group label="Conteúdo" label-for="category-content">
+						<VueEditor
+							v-model="article.content"
+							placeholder="Informe o Conteúdo do Artigo..."
+						/>
+					</b-form-group>
+				</b-col>
+			</b-row>
 			<b-row class="mb-3">
 				<b-col xs="12">
 					<b-button variant="primary" v-show="mode === 'save'" @click="save">
@@ -107,7 +117,7 @@
 				</b-button>
 			</template>
 		</b-table>
-		
+
 		<div class="pagination">
 			<b-pagination
 				v-model="page"
@@ -124,16 +134,17 @@
 				></b-form-select>
 			</div>
 		</div>
-
 	</div>
 </template>
 
 <script>
 import axios from "axios";
 import { baseApiUrl, showError } from "@/config/global";
+import { VueEditor } from "vue2-editor";
 
 export default {
 	name: "ArticleAdmin",
+	components: { VueEditor },
 	data: function() {
 		return {
 			mode: "save",
