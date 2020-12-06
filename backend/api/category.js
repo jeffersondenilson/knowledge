@@ -106,19 +106,20 @@ module.exports = app => {
 
 	const get = async (req, res) => {
 		try{
-			const page = req.query.page || 1;
-			const limit = req.query.limit || 10;
+			const { page, limit } = req.query;
+			const query = app.db('categories');
+			if(page && limit){
+				query.limit(limit).offset(page * limit - limit);
+			}
 
-			const [categories, categoriesTotal] = await Promise.all([
-				app.db('categories')
-					.limit(limit).offset(page * limit - limit),
-
-				app.db('categories').count('id').first()
+			const [ categoriesTotal, categories ] = await Promise.all([
+				app.db('categories').count('id').first(),
+				query
 			]);
 
 			res.json({
-				categories: withPath(categories),
-				count: parseInt(categoriesTotal.count)
+				count: parseInt(categoriesTotal.count),
+				categories: withPath(categories)
 			});
 		}catch(msg){
 			res.status(500).send();

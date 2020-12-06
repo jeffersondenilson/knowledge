@@ -52,21 +52,22 @@ module.exports = app => {
 
 	const get = async (req, res) => {
 		try{
-			const page = req.query.page || 1;
-			const limit = req.query.limit || 10;
+			const { page, limit } = req.query;
+			const query = app.db({a: 'articles', u: 'users'})
+				.select('a.id', 'a.name', 'a.description', { author: 'u.name' })
+				.whereRaw('?? = ??', ['u.id', 'a.userId']);
+			if(page && limit){
+				query.limit(limit).offset(page * limit - limit);
+			}
 
-			const [articles, articlesTotal] = await Promise.all([
-				app.db({a: 'articles', u: 'users'})
-					.select('a.id', 'a.name', 'a.description', { author: 'u.name' })
-					.whereRaw('?? = ??', ['u.id', 'a.userId'])
-					.limit(limit).offset(page * limit - limit),
-
-				app.db('articles').count('id').first()
+			const [ articlesTotal, articles ] = await Promise.all([
+				app.db('articles').count('id').first(),
+				query
 			]);
 			
 			res.json({ 
-				articles, 
-				count: parseInt(articlesTotal.count) 
+				count: parseInt(articlesTotal.count), 
+				articles
 			});
 		}catch(msg){
 			res.status(500).send(msg);

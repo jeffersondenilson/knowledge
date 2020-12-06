@@ -79,21 +79,22 @@ module.exports = app => {
 
 	const get = async (req, res) => {
 		try{
-			const page = req.query.page || 1;
-			const limit = req.query.limit || 10;
+			const { page, limit } = req.query;
+			const query = app.db('users')
+				.select('id', 'name', 'email', 'admin')
+				.whereNull('deletedAt');
+			if(page && limit){
+				query.limit(limit).offset(page * limit - limit);
+			}
 
-			const [users, usersTotal] = await Promise.all([
-				app.db('users')
-					.select('id', 'name', 'email', 'admin')
-					.whereNull('deletedAt')
-					.limit(limit).offset(page * limit - limit),
-
-				app.db('users').count('id').whereNull('deletedAt').first()
+			const [ usersTotal, users ] = await Promise.all([
+				app.db('users').count('id').whereNull('deletedAt').first(),
+				query
 			]);
 
 			res.json({
-				users,
-				count: parseInt(usersTotal.count)
+				count: parseInt(usersTotal.count),
+				users
 			});
 		}catch(msg){
 			res.status(500).send(msg);
