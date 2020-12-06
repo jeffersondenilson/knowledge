@@ -175,8 +175,11 @@ export default {
 				.catch(showError);
 		},
 		loadArticle(article, mode = "save") {
+			// carrega artigo com conteúdo
 			this.mode = mode;
-			this.article = { ...article };
+			axios.get(`${baseApiUrl}/articles/${article.id}`)
+				.then(res => this.article = res.data)
+				.catch(showError);
 		},
 		reset() {
 			this.mode = "save";
