@@ -9,7 +9,12 @@ module.exports = app => {
 	}
 
 	const save = async (req, res) => {
-		const user = {...req.body};
+		const user = {
+			name: req.body.name,
+			email: req.body.email,
+			password: req.body.password,
+			admin: req.body.admin
+		};
 		if(req.params.id) user.id = req.params.id;
 
 		// admin = false, caso esteja criando a conta em '/signup'

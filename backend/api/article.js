@@ -4,7 +4,14 @@ module.exports = app => {
 	const { existsOrError } = app.api.validation;
 
 	const save = (req, res) => {
-		const article = {...req.body};
+		const article = {
+			name: req.body.name,
+			description: req.body.description,
+			imageUrl: req.body.imageUrl,
+			content: req.body.content,
+			userId: req.body.userId,
+			categoryId: req.body.categoryId
+		};
 		if(req.params.id) article.id = req.params.id;
 
 		// validação
