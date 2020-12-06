@@ -27,15 +27,15 @@
 					</b-form-group>
 				</b-col>
 			</b-row>
-			<b-row id="aviso">
-				<b-col md="6" sm="12">
+			<b-row>
+				<b-col md="7">
 					<b-alert
 						variant="danger"
 						:show="mode === 'remove'"
 						style="font-size: 1.1rem;"
 					>
-						<i class="fa fa-exclamation-triangle"></i>
-						<br />
+						<i class="fa fa-lg fa-exclamation-triangle"></i>
+						
 						Excluir uma categoria irá excluir todas as subcategorias e artigos
 						contidos nela!
 					</b-alert>
@@ -55,13 +55,15 @@
 				</b-col>
 			</b-row>
 		</b-form>
-		<!-- TODO: paginar do lado cliente -->
+
 		<b-table
 			hover
 			striped
 			responsive
 			:items="categories"
 			:fields="fields"
+			:per-page="limit"
+			:current-page="page"
 			id="categories-table"
 		>
 			<template #cell(actions)="data">
@@ -94,6 +96,7 @@
 				></b-form-select>
 			</div>
 		</div>
+
 	</div>
 </template>
 
@@ -122,9 +125,8 @@ export default {
 	methods: {
 		loadCategories() {
 			axios
-				.get(`${baseApiUrl}/categories?page=${this.page}&limit=${this.limit}`)
+				.get(`${baseApiUrl}/categories`)
 				.then(res => {
-					console.log(res.data.categories);
 					this.categories = res.data.categories;
 					this.count = res.data.count;
 				})
@@ -140,9 +142,6 @@ export default {
 			this.loadCategories();
 		},
 		save() {
-			// if(this.category.id === this.category.parentId){
-			// 	this.category.parentId = null;
-			// }
 			const method = this.category.id ? "put" : "post";
 			const id = this.category.id ? `/${this.category.id}` : "";
 			axios[method](`${baseApiUrl}/categories${id}`, this.category)
@@ -169,7 +168,7 @@ export default {
 	computed: {
 		categoriesPaths() {
 			const paths = [
-				{ value: null, text: "" },
+				{ value: null, text: "(Nenhuma)" },
 				...this.categories.map(c => ({
 					value: c.parentId,
 					text: c.path
@@ -180,14 +179,6 @@ export default {
 	},
 	mounted() {
 		this.loadCategories();
-	},
-	watch: {
-		page() {
-			this.loadCategories();
-		},
-		limit() {
-			this.loadCategories();
-		}
 	}
 };
 </script>
