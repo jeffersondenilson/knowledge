@@ -95,18 +95,20 @@ module.exports = app => {
 	const getByCategory = async (req, res) => {
 		try{
 			const categoryId = req.params.id;
-			const page = req.query.page || 1;
-			const limit = req.query.limit || 10;
+			const { page, limit } = req.query;
 			// busca id das subcategorias
 			const categories = await app.db.raw(queries.categoryWithChildren, categoryId);
 			const ids = categories.rows.map(c => c.id);
 
-			const articles = await app.db({a: 'articles', u: 'users'})
+			const query = app.db({a: 'articles', u: 'users'})
 				.select('a.id', 'a.name', 'a.description', 'a.imageUrl', { author: 'u.name' })
 				.whereRaw('?? = ??', ['u.id', 'a.userId'])
 				.whereIn('categoryId', ids)
-				.orderBy('a.id', 'desc')
-				.limit(limit).offset(page * limit - limit);
+				.orderBy('a.id', 'desc');
+			if(page && limit){
+				query.limit(limit).offset(page * limit - limit);
+			}
+			const articles = await query;
 			
 			res.json(articles);
 		}catch(msg){

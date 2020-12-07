@@ -29,16 +29,11 @@
 						id="article-imageUrl"
 						type="text"
 						v-model="article.imageUrl"
-						:readonly="mode === 'remove'"
 						autocomplete="off"
 						placeholder="Informe a URL da Imagem do Artigo..."
 					/>
 				</b-form-group>
-				<b-form-group
-					v-show="mode === 'save'"
-					label="Categoria:"
-					label-for="article-categoryId"
-				>
+				<b-form-group label="Categoria:" label-for="article-categoryId">
 					<b-form-select
 						id="article-categoryId"
 						v-model="article.categoryId"
@@ -46,11 +41,7 @@
 						required
 					></b-form-select>
 				</b-form-group>
-				<b-form-group
-					v-show="mode === 'save'"
-					label="Autor:"
-					label-for="article-userId"
-				>
+				<b-form-group label="Autor:" label-for="article-userId">
 					<b-form-select
 						id="article-userId"
 						v-model="article.userId"
@@ -58,11 +49,7 @@
 						required
 					></b-form-select>
 				</b-form-group>
-				<b-form-group
-					v-show="mode === 'save'"
-					label="Conteúdo:"
-					label-for="category-content"
-				>
+				<b-form-group label="Conteúdo:" label-for="category-content">
 					<VueEditor
 						v-model="article.content"
 						placeholder="Informe o Conteúdo do Artigo..."
