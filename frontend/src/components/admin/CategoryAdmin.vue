@@ -1,40 +1,33 @@
 <template>
 	<div class="category-admin">
 		<b-form>
-			<b-row>
-				<b-col>
-					<b-form-group label="Nome:" label-for="category-name">
-						<b-form-input
-							id="category-name"
-							type="text"
-							v-model="category.name"
-							:readonly="mode === 'remove'"
-							required
-							autocomplete="off"
-							placeholder="Informe o Nome da Categoria..."
-						/>
-					</b-form-group>
-				</b-col>
-			</b-row>
-			<b-row>
-				<b-col>
-					<b-form-group label="Categoria pai:" label-for="category-parentId">
-						<b-form-select
-							v-if="mode === 'save'"
-							id="category-parentId"
-							v-model="category.parentId"
-							:options="categories"
-						></b-form-select>
-						<b-form-input 
-							v-else
-							id="category-parentId"
-							type="text"
-							v-model="category.path"
-							readonly
-						/>
-					</b-form-group>
-				</b-col>
-			</b-row>
+			<b-form-group label="Nome:" label-for="category-name">
+				<b-form-input
+					id="category-name"
+					type="text"
+					v-model="category.name"
+					:readonly="mode === 'remove'"
+					required
+					autocomplete="off"
+					placeholder="Informe o Nome da Categoria..."
+				/>
+			</b-form-group>
+			<b-form-group label="Categoria pai:" label-for="category-parentId">
+				<b-form-select
+					v-if="mode === 'save'"
+					id="category-parentId"
+					v-model="category.parentId"
+					:options="categories"
+				></b-form-select>
+				<b-form-input
+					v-else
+					id="category-parentId"
+					type="text"
+					v-model="category.path"
+					readonly
+				/>
+			</b-form-group>
+
 			<b-row>
 				<b-col md="7">
 					<b-alert
@@ -48,6 +41,7 @@
 					</b-alert>
 				</b-col>
 			</b-row>
+
 			<b-row class="mb-3">
 				<b-col xs="12">
 					<b-button variant="primary" v-show="mode === 'save'" @click="save">
@@ -103,7 +97,6 @@
 				></b-form-select>
 			</div>
 		</div>
-
 	</div>
 </template>
 

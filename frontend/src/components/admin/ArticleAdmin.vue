@@ -1,85 +1,75 @@
 <template>
 	<div class="article-admin">
 		<b-form>
-			<!-- TODO: remover b-row -->
-			<b-row>
-				<b-col>
-					<b-form-group label="Nome:" label-for="article-name">
-						<b-form-input
-							id="article-name"
-							type="text"
-							v-model="article.name"
-							:readonly="mode === 'remove'"
-							required
-							autocomplete="off"
-							placeholder="Informe o Nome do Artigo..."
-						/>
-					</b-form-group>
-				</b-col>
-			</b-row>
-			<b-row>
-				<b-col>
-					<b-form-group label="Descrição:" label-for="article-description">
-						<b-form-input
-							id="article-description"
-							type="text"
-							v-model="article.description"
-							:readonly="mode === 'remove'"
-							required
-							autocomplete="off"
-							placeholder="Informe a descrição do Artigo..."
-						/>
-					</b-form-group>
-				</b-col>
-			</b-row>
-			<b-row>
-				<b-col>
-					<b-form-group label="Imagem (URL):" label-for="article-imageUrl">
-						<b-form-input
-							id="article-imageUrl"
-							type="text"
-							v-model="article.imageUrl"
-							:readonly="mode === 'remove'"
-							autocomplete="off"
-							placeholder="Informe a URL da Imagem do Artigo..."
-						/>
-					</b-form-group>
-				</b-col>
-			</b-row>
-			<b-row v-show="mode === 'save'">
-				<b-col>
-					<b-form-group label="Categoria:" label-for="article-categoryId">
-						<b-form-select
-							id="article-categoryId"
-							v-model="article.categoryId"
-							:options="categories"
-							required
-						></b-form-select>
-					</b-form-group>
-				</b-col>
-			</b-row>
-			<b-row v-if="mode === 'save'">
-				<b-col>
-					<b-form-group label="Autor:" label-for="article-userId">
-						<b-form-select
-							id="article-userId"
-							v-model="article.userId"
-							:options="users"
-							required
-						></b-form-select>
-					</b-form-group>
-				</b-col>
-			</b-row>
-			<b-row v-show="mode === 'save'">
-				<b-col>
-					<b-form-group label="Conteúdo" label-for="category-content">
-						<VueEditor
-							v-model="article.content"
-							placeholder="Informe o Conteúdo do Artigo..."
-						/>
-					</b-form-group>
-				</b-col>
-			</b-row>
+			<b-form-group label="Nome:" label-for="article-name">
+				<b-form-input
+					id="article-name"
+					type="text"
+					v-model="article.name"
+					:readonly="mode === 'remove'"
+					required
+					autocomplete="off"
+					placeholder="Informe o Nome do Artigo..."
+				/>
+			</b-form-group>
+			<b-form-group label="Descrição:" label-for="article-description">
+				<b-form-input
+					id="article-description"
+					type="text"
+					v-model="article.description"
+					:readonly="mode === 'remove'"
+					required
+					autocomplete="off"
+					placeholder="Informe a descrição do Artigo..."
+				/>
+			</b-form-group>
+			<span v-show="mode === 'save'">
+				<b-form-group label="Imagem (URL):" label-for="article-imageUrl">
+					<b-form-input
+						id="article-imageUrl"
+						type="text"
+						v-model="article.imageUrl"
+						:readonly="mode === 'remove'"
+						autocomplete="off"
+						placeholder="Informe a URL da Imagem do Artigo..."
+					/>
+				</b-form-group>
+				<b-form-group
+					v-show="mode === 'save'"
+					label="Categoria:"
+					label-for="article-categoryId"
+				>
+					<b-form-select
+						id="article-categoryId"
+						v-model="article.categoryId"
+						:options="categories"
+						required
+					></b-form-select>
+				</b-form-group>
+				<b-form-group
+					v-show="mode === 'save'"
+					label="Autor:"
+					label-for="article-userId"
+				>
+					<b-form-select
+						id="article-userId"
+						v-model="article.userId"
+						:options="users"
+						required
+					></b-form-select>
+				</b-form-group>
+				<b-form-group
+					v-show="mode === 'save'"
+					label="Conteúdo:"
+					label-for="category-content"
+				>
+					<VueEditor
+						v-model="article.content"
+						placeholder="Informe o Conteúdo do Artigo..."
+					/>
+				</b-form-group>
+			</span>
+
 			<b-row class="mb-3">
 				<b-col xs="12">
 					<b-button variant="primary" v-show="mode === 'save'" @click="save">
@@ -198,9 +188,10 @@ export default {
 		loadArticle(article, mode = "save") {
 			// carrega artigo com conteúdo
 			this.mode = mode;
-			axios.get(`${baseApiUrl}/articles/${article.id}`)
+			axios
+				.get(`${baseApiUrl}/articles/${article.id}`)
 				.then(res => {
-					this.article = res.data;	
+					this.article = res.data;
 				})
 				.catch(showError);
 		},
