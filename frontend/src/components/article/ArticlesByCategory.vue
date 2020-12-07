@@ -6,11 +6,13 @@
 			subtitle="Categoria"
 		/>
 		<!-- TODO: card -->
-		<ul>
+		<!-- <ul>
 			<li v-for="article in articles" :key="article.id">
 				{{ article.name }}
 			</li>
-		</ul>
+		</ul> -->
+		<ArticleItem v-for="article in articles" :key="article.id" :article="article" />
+
 		<div class="load-more">
 			<button
 				v-if="loadMore"
@@ -30,10 +32,11 @@
 import { baseApiUrl, showError } from "@/config/global";
 import axios from "axios";
 import PageTitle from "../template/PageTitle";
+import ArticleItem from "./ArticleItem";
 
 export default {
 	name: "ArticlesByCategory",
-	components: { PageTitle },
+	components: { PageTitle, ArticleItem },
 	data: function() {
 		return {
 			category: {},
@@ -50,9 +53,8 @@ export default {
 				.catch(showError);
 		},
 		getArticles() {
-			// TODO: mudar limit
 			axios(
-				`${baseApiUrl}/categories/${this.category.id}/articles?page=${this.page}&limit=2`
+				`${baseApiUrl}/categories/${this.category.id}/articles?page=${this.page}&limit=10`
 			)
 				.then(res => {
 					this.articles = this.articles.concat(res.data);
