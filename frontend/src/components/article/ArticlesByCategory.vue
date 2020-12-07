@@ -1,6 +1,10 @@
 <template>
 	<div class="articles-by-category">
-		<PageTitle icon="fa fa-folder-o" :title="category.name" subtitle="Categoria" />
+		<PageTitle
+			icon="fa fa-folder-o"
+			:title="category.name"
+			subtitle="Categoria"
+		/>
 		<!-- TODO: card -->
 		<ul>
 			<li v-for="article in articles" :key="article.id">
@@ -49,11 +53,13 @@ export default {
 			// TODO: mudar limit
 			axios(
 				`${baseApiUrl}/categories/${this.category.id}/articles?page=${this.page}&limit=2`
-			).then(res => {
-				this.articles = this.articles.concat(res.data);
-				this.page++;
-				if (res.data.length === 0) this.loadMore = false;
-			});
+			)
+				.then(res => {
+					this.articles = this.articles.concat(res.data);
+					this.page++;
+					if (res.data.length === 0) this.loadMore = false;
+				})
+				.catch(showError);
 		}
 	},
 	mounted() {
@@ -65,14 +71,14 @@ export default {
 </script>
 
 <style>
-	.articles-by-category .load-more {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		margin-top: 25px;
-	}
+.articles-by-category .load-more {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin-top: 25px;
+}
 
-	.articles-by-category .text-lg {
-		font-size: 1.2rem;
-	}
+.articles-by-category .text-lg {
+	font-size: 1.2rem;
+}
 </style>
