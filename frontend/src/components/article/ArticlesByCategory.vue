@@ -70,7 +70,6 @@ export default {
 			this.articles = [];
 			this.page = 1;
 			this.loadMore = true;
-
 			this.getCategory();
 			this.getArticles();
 		}

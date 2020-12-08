@@ -8,6 +8,7 @@
 				v-model="treeFilter"
 				class="filter-field"
 			/>
+			<i class="fa fa-close" @click="treeFilter = ''" v-show="treeFilter"></i>
 		</div>
 		<Tree
 			:data="treeData"
@@ -79,11 +80,12 @@ export default {
 	background-color: rgba(255, 255, 255, 0.2);
 }
 
-.menu .tree-node .tree-content > .tree-anchor {
+.menu .tree-node .tree-content .tree-anchor {
 	color: #ccc;
 }
 
-.menu .tree-node:not(.selected) .tree-content:hover {
+.tree-node:not(.selected) > .tree-content:hover span,
+.tree-node:not(.selected) > .tree-content:hover {
 	color: #000;
 }
 
@@ -103,6 +105,10 @@ export default {
 .menu .menu-filter i {
 	color: #aaa;
 	margin-right: 10px;
+}
+
+.menu .menu-filter .fa-close {
+	cursor: pointer;
 }
 
 .menu input {
