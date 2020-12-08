@@ -5,12 +5,7 @@
 			:title="category.name"
 			subtitle="Categoria"
 		/>
-		<!-- TODO: card -->
-		<!-- <ul>
-			<li v-for="article in articles" :key="article.id">
-				{{ article.name }}
-			</li>
-		</ul> -->
+		
 		<ArticleItem v-for="article in articles" :key="article.id" :article="article" />
 
 		<div class="load-more">
