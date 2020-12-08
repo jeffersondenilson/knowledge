@@ -5,8 +5,12 @@
 			:title="category.name"
 			subtitle="Categoria"
 		/>
-		
-		<ArticleItem v-for="article in articles" :key="article.id" :article="article" />
+
+		<ArticleItem
+			v-for="article in articles"
+			:key="article.id"
+			:article="article"
+		/>
 
 		<div class="load-more">
 			<button
@@ -57,6 +61,18 @@ export default {
 					if (res.data.length === 0) this.loadMore = false;
 				})
 				.catch(showError);
+		}
+	},
+	watch: {
+		// muda a categoria quando a rota é mudada no menu
+		$route(to) {
+			this.category.id = to.params.id;
+			this.articles = [];
+			this.page = 1;
+			this.loadMore = true;
+
+			this.getCategory();
+			this.getArticles();
 		}
 	},
 	mounted() {

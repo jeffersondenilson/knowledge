@@ -1,21 +1,21 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
+import Vue from "vue";
+import Vuex from "vuex";
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
 	state: {
-		isMenuVisible: false,
+		isMenuVisible: true,
 		user: {
-			name: 'Example User',
-			email: 'example@email.com'
+			name: "Example User",
+			email: "example@email.com"
 		}
 	},
 	mutations: {
-		toggleMenu(state, isVisible){
-			if(isVisible === undefined){
+		toggleMenu(state, isVisible) {
+			if (isVisible === undefined) {
 				state.isMenuVisible = !state.isMenuVisible;
-			}else{
+			} else {
 				state.isMenuVisible = isVisible;
 			}
 		}
