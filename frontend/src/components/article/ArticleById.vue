@@ -41,7 +41,7 @@ export default {
 .article-content pre {
 	padding: 20px;
 	border-radius: 8px;
-	font-size: 1.2rem;
+	font-size: 1.1rem;
 	background-color: #1e1e1e;
 	color: #fff;
 }

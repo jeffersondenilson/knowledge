@@ -1,19 +1,4 @@
 <template>
-	<!-- <div class="article-item">
-		<router-link :to="`/articles/${article.id}`">
-			<div class="article-item-image d-none d-sm-block">
-				<img v-if="article.imageUrl" :src="article.imageUrl" height="150" width="150" alt="Article">
-				<img v-else src="@/assets/article.png" height="150" width="150" alt="Article">
-			</div>
-			<div class="article-item-info">
-				<h2>{{ article.name }}</h2>
-				<p>{{ article.description }}</p>
-				<span class="article-item-author">
-					<strong>Autor: </strong>{{ article.author }}
-				</span>
-			</div>
-		</router-link>
-	</div> -->
 		<b-card class="article-item">
 			<router-link :to="`/articles/${article.id}`">
 		    <b-row>
@@ -22,14 +7,6 @@
 		        <b-card-img v-else :src="require('@/assets/article.png')" alt="Article"></b-card-img>
 		      </b-col>
 		      <b-col>
-		        <!-- <b-card-body :title="article.name">
-		          <b-card-text class="article-item-body">
-		            {{ article.description }}
-		            <span class="article-author">
-		            	<strong>Autor: </strong>{{ article.author }}
-		            </span>
-		          </b-card-text>
-		        </b-card-body> -->
 		        <div class="article-item-info">
 		        	<h2>{{ article.name }}</h2>
 							<p>{{ article.description }}</p>
@@ -51,6 +28,12 @@
 </script>
 
 <style>
+	.article-item {
+		margin: 10px 0px;
+		border: 1px solid rgba(0, 0, 0, 0.2);
+		box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);
+	}
+
 	.article-item a {
 		text-decoration: none;
 		color: #000;
@@ -71,7 +54,12 @@
 		flex-direction: column;
 	}
 
+	.article-item-info p {
+		color: #555;
+		font-size: 1.1rem;
+	}
+
 	.article-item-author {
-		margin: 5px;
+		margin-top: 5px;
 	}
 </style>
