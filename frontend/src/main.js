@@ -10,10 +10,6 @@ import router from "./config/router";
 
 Vue.config.productionTip = false;
 
-// TODO: remover
-require("axios").defaults.headers.common["Authorization"] =
-	"bearer " + process.env.VUE_APP_TOKEN;
-
 new Vue({
 	store,
 	router,
