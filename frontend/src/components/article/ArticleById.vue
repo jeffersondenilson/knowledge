@@ -10,6 +10,8 @@
 </template>
 
 <script>
+import "highlightjs/styles/monokai-sublime.css";
+import hljs from "highlightjs/highlight.pack.js";
 import { baseApiUrl, showError } from "@/config/global";
 import axios from "axios";
 import PageTitle from "../template/PageTitle";
@@ -27,6 +29,12 @@ export default {
 			.get(`${baseApiUrl}/articles/${this.$route.params.id}`)
 			.then(res => (this.article = res.data))
 			.catch(showError);
+	},
+	updated() {
+		// highlight de código na tag pre
+		document.querySelectorAll(".article-content pre").forEach(el => {
+			hljs.highlightBlock(e);
+		});
 	}
 };
 </script>
