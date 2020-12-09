@@ -10,8 +10,8 @@
 </template>
 
 <script>
-import "highlightjs/styles/monokai-sublime.css";
-import hljs from "highlightjs/highlight.pack.js";
+import "highlight.js/styles/monokai-sublime.css";
+import hljs from "highlight.js/lib/index";
 import { baseApiUrl, showError } from "@/config/global";
 import axios from "axios";
 import PageTitle from "../template/PageTitle";
