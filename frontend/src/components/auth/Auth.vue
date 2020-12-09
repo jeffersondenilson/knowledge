@@ -7,7 +7,7 @@
 				{{ showSignUp ? "Cadastro" : "Login" }}
 			</div>
 
-			<b-form>
+			<b-form class="auth-form">
 				<b-form-group v-if="showSignUp" label="Nome:" label-for="name">
 					<b-form-input
 						id="name"
@@ -74,7 +74,7 @@
 			</button>
 			<button v-else @click="signin" class="btn btn-primary">Entrar</button>
 
-			<a @click.prevent="showSignUp = !showSignUp">
+			<a href @click.prevent="showSignUp = !showSignUp">
 				<span v-if="showSignUp">Já tem cadastro? Acesse o Login!</span>
 				<span v-else>Não tem cadastro? Registre-se aqui!</span>
 			</a>
@@ -101,8 +101,7 @@ export default {
 				.then(res => {
 					this.$store.commit("setUser", res.data);
 					localStorage.setItem(userKey, JSON.stringify(res.data));
-					this.$toasted.global.defaultSuccess({ msg: "Usuário logado" });
-					this.$route.push({ path: "/" });
+					this.$router.push({ path: "/" });
 				})
 				.catch(showError);
 		},
@@ -163,5 +162,9 @@ export default {
 		rgba(120, 120, 120, 0.75),
 		rgba(120, 120, 120, 0)
 	);
+}
+
+.auth-form {
+	width: 100%;
 }
 </style>

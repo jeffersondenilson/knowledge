@@ -14,7 +14,7 @@
 				<i class="fa fa-cogs"></i> Administração
 			</router-link>
 		</b-dropdown-item>
-		<b-dropdown-item href="#">
+		<b-dropdown-item href="#" @click="logout">
 			<i class="fa fa-sign-out"></i> Sair
 		</b-dropdown-item>
 	</b-dropdown>
