@@ -51,6 +51,10 @@ export default {
 				name: "articlesByCategory",
 				params: { id: node.id }
 			});
+			// esconde o menu quando é clicado em telas pequenas
+			if (this.$mq === "xs" || this.$mq === "sm") {
+				this.$store.commit("toggleMenu", false);
+			}
 		}
 	},
 	mounted() {
