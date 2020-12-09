@@ -5,6 +5,7 @@ import App from "./App";
 
 import "./config/bootstrap";
 import "./config/toasted";
+import "./config/axios";
 import store from "./config/store";
 import router from "./config/router";
 
