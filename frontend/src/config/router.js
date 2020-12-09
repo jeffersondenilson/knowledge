@@ -6,6 +6,7 @@ import AdminPages from "../components/admin/AdminPages";
 import ArticlesByCategory from "../components/article/ArticlesByCategory";
 import ArticleById from "../components/article/ArticleById";
 import Auth from "../components/auth/Auth";
+import { userKey } from "@/config/global";
 
 Vue.use(VueRouter);
 
@@ -18,7 +19,8 @@ const routes = [
 	{
 		name: "adminPages",
 		path: "/admin",
-		component: AdminPages
+		component: AdminPages,
+		meta: { requiresAdmin: true }
 	},
 	{
 		name: "articlesByCategory",
@@ -37,7 +39,19 @@ const routes = [
 	}
 ];
 
-export default new VueRouter({
+const router = new VueRouter({
 	mode: "history",
 	routes
 });
+
+router.beforeEach((to, from, next) => {
+	// verifica se a rota tem requiresAdmin
+	if (to.matched.some(record => record.meta.requiresAdmin)) {
+		const user = JSON.parse(localStorage.getItem(userKey));
+		user && user.admin ? next() : next({ path: "/" });
+	} else {
+		next();
+	}
+});
+
+export default router;

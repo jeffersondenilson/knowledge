@@ -10,7 +10,7 @@
 		</template>
 
 		<b-dropdown-item>
-			<router-link to="/admin">
+			<router-link to="/admin" v-if="user.admin">
 				<i class="fa fa-cogs"></i> Administração
 			</router-link>
 		</b-dropdown-item>
