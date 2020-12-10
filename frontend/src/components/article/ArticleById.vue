@@ -33,7 +33,7 @@ export default {
 	updated() {
 		// highlight de código na tag pre
 		document.querySelectorAll(".article-content pre").forEach(el => {
-			hljs.highlightBlock(e);
+			hljs.highlightBlock(el);
 		});
 	}
 };
@@ -52,6 +52,8 @@ export default {
 	font-size: 1.1rem;
 	background-color: #1e1e1e;
 	color: #fff;
+	max-width: 100%;
+	overflow-x: auto;
 }
 
 .article-content img {
