@@ -38,8 +38,6 @@ export default {
 				const userData = JSON.parse(localStorage.getItem(userKey));
 				// seta como null para trazer dados atualizados
 				this.$store.commit("setUser", null);
-				// TODO: manter userData quando recarregar a página
-				// console.log(userData);
 				// usuário não tem token, redirecionar para login
 				if (userData === null) {
 					this.validatingToken = false;
@@ -47,7 +45,7 @@ export default {
 					return;
 				}
 
-				const res = await axios.post(`${baseApiUrl}/validateToken`);
+				const res = await axios.post(`${baseApiUrl}/validateToken`, userData);
 
 				if (res.data) {
 					this.$store.commit("setUser", userData);
