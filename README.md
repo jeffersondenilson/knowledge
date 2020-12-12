@@ -10,7 +10,7 @@ cd knowledge
 cd backend
 npm install
 # Instalar dependências do frontend
-cd client
+cd frontend
 npm install
 ```
 
